@@ -39,9 +39,9 @@ import logger from "./utils/logger.js";
 
 //Server
 const app = express();
-const PORT = config.port;
+const PORT = config.port || 8080;
 const httpServer = app.listen(PORT, () => {
-  `Server listening on port ${PORT}`;
+	`Server listening on port ${PORT}`;
 });
 
 //Midlewares
@@ -51,35 +51,35 @@ initializePassport();
 app.use(passport.initialize());
 app.use(cors());
 app.use(
-  compression({
-    brotli: {
-      enabled: true,
-      zlib: {},
-    },
-  })
+	compression({
+		brotli: {
+			enabled: true,
+			zlib: {},
+		},
+	})
 );
 app.use(addLogger);
 
 //Swagger
 app.use(
-  "/api/docs",
-  swaggerUiExpress.serve,
-  swaggerUiExpress.setup(SwaggerSpecs)
+	"/api/docs",
+	swaggerUiExpress.serve,
+	swaggerUiExpress.setup(SwaggerSpecs)
 );
 
 //Handlebars
 app.engine(
-  "hbs",
-  handlebars.engine({
-    extname: ".hbs",
-    defaultLayout: "main",
-    handlebars: allowInsecurePrototypeAccess(Handlebars),
-    helpers: {
-      ifRoleEquals: function (role, targetRole, options) {
-        return role === targetRole ? options.fn(this) : options.inverse(this);
-      },
-    },
-  })
+	"hbs",
+	handlebars.engine({
+		extname: ".hbs",
+		defaultLayout: "main",
+		handlebars: allowInsecurePrototypeAccess(Handlebars),
+		helpers: {
+			ifRoleEquals: function (role, targetRole, options) {
+				return role === targetRole ? options.fn(this) : options.inverse(this);
+			},
+		},
+	})
 );
 app.set("view engine", "hbs");
 app.set("views", `${basePath}/views`);
@@ -89,11 +89,11 @@ app.use(express.static(`${basePath}/public`));
 
 //Mongoose
 const mongoInstance = async () => {
-  try {
-    await MongoSingleton.getInstance();
-  } catch (error) {
-    logger.error(error);
-  }
+	try {
+		await MongoSingleton.getInstance();
+	} catch (error) {
+		logger.error(error);
+	}
 };
 mongoInstance();
 
@@ -120,14 +120,14 @@ app.use("/", viewsRouter);
 
 //Socket
 io.on("connection", (socket) => {
-  logger.info("New client connected: " + socket.id);
+	logger.info("New client connected: " + socket.id);
 
-  socket.on("message", async (data) => {
-    logger.info(data);
-    await messagesService.create(data);
-  });
+	socket.on("message", async (data) => {
+		logger.info(data);
+		await messagesService.create(data);
+	});
 
-  socket.on("disconnect", () => {
-    logger.info("Client disconnected: " + socket.id);
-  });
+	socket.on("disconnect", () => {
+		logger.info("Client disconnected: " + socket.id);
+	});
 });

@@ -32,7 +32,4 @@ export default {
 	adminPass: process.env.ADMIN_PASS,
 	stripePK: process.env.STRIPE_PK,
 	stripeSK: process.env.STRIPE_SK,
-	// clientID: process.env.GITHUB_CLIENT_ID,
-	// clientSecret: process.env.GITHUB_CLIENT_SECRET,
-	// callbackUrl: process.env.GITHUB_CALLBACK_URL,
 };
